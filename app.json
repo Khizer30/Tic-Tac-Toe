@@ -1,33 +1,33 @@
 {
-  "expo": {
+  "expo": 
+  {
     "name": "Tic-Tac-Toe",
     "slug": "Tic-Tac-Toe",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logos/icon_old.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
+    "splash": 
+    {
+      "image": "./assets/logos/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F5F5F5"
     },
-    "updates": {
+    "updates": 
+    {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
+    "assetBundlePatterns": 
+    [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+    "android": 
+    {
+      "adaptiveIcon": 
+      {
+        "foregroundImage": "./assets/logos/icon.png",
+        "backgroundColor": "#F5F5F5"
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     }
   }
 }
