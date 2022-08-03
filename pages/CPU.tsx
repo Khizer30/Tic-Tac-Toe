@@ -1,10 +1,10 @@
-import { useState } from "react" ;
+import { useState, useEffect, useRef } from "react" ;
 import { StyleSheet, Image, Text, View, TouchableOpacity, ImageSourcePropType } from "react-native" ;
 // ...
 import Images from "../components/Images" ;
 
 // Offline
-function Offline(): JSX.Element
+function CPU(): JSX.Element
 {
   // Variables
   const imgObj: ImageSourcePropType[] =
@@ -14,6 +14,8 @@ function Offline(): JSX.Element
     Images["emp7"], Images["emp8"], Images["emp9"]
   ] ;
   const [turn, setTurn] = useState<boolean>(true) ;
+  const slots = useRef<boolean[]>([true, true, true, true, true, true, true, true, true]) ;
+  const timeout = useRef<NodeJS.Timeout>(undefined) ;
   const [game, setGame] = useState<boolean>(true) ;
   const [message, setMes] = useState<string>("") ;
   const [img, setImg] = useState<ImageSourcePropType[]>(imgObj) ;
@@ -23,29 +25,78 @@ function Offline(): JSX.Element
   {
     if (game)
     {
-      let index: number = x - 1 ;
-
-      if (img[index] === Images["emp" + x])
+      if (turn)
       {
-        let temp: ImageSourcePropType[] = img ;
+        let index: number = x - 1 ;
 
-        // Change Image
-        if (turn)
+        if (img[index] === Images["emp" + x])
         {
+          let temp: ImageSourcePropType[] = img ;
+
+          // Change Image
           temp[index] = Images["cir" + x] ;
-        }
-        else
-        {
-          temp[index] = Images["crs" + x] ;
-        }
 
-        checkGame(temp) ;
+          // Change Slots
+          slots.current[index] = false ;
 
-        setTurn(!turn) ;
-        setImg(temp) ;
+          checkGame(temp) ;
+
+          setTurn(!turn) ;
+          setImg(temp) ;
+        }
       }
     }
   }
+
+  // CPU Click
+  function handleCPU(x: number): void
+  {
+    if (game)
+    {
+      if (!turn)
+      {
+        let index: number = x - 1 ;
+
+        if (img[index] === Images["emp" + x])
+        {
+          let temp: ImageSourcePropType[] = img ;
+
+          // Change Image
+          temp[index] = Images["crs" + x] ;
+
+          // Change Slots
+          slots.current[index] = false ;
+
+          checkGame(temp) ;
+
+          setTurn(!turn) ;
+          setImg(temp) ;
+        }
+      }
+    }
+  }
+
+  // CPU Brain
+  useEffect(() =>
+  {
+    if (!turn)
+    {
+      let availableIndex: number[] = [] ;
+
+      for (let i: number = 0; i < slots.current.length; i++)
+      {
+        if (slots.current[i])
+        {
+          availableIndex.push(i) ;
+        }
+      }
+
+      let index: number = Math.floor(Math.random() * (availableIndex.length)) ;
+
+      // CPU Click
+      timeout.current = setTimeout(() => handleCPU(availableIndex[index] + 1), 1500) ;
+    }
+  }, [turn]) ;
 
   // Check Game
   function checkGame(temp: ImageSourcePropType[]): void
@@ -152,7 +203,7 @@ function Offline(): JSX.Element
       }
       else
       {
-        setMes("PLAYER 2 WON!") ;
+        setMes("CPU WON!") ;
       }
 
       setGame(gameContinue) ;
@@ -163,6 +214,8 @@ function Offline(): JSX.Element
   function reset(): void
   {
     setTurn(true) ;
+    slots.current = [true, true, true, true, true, true, true, true, true] ;
+    clearTimeout(timeout.current) ;
     setGame(true) ;
     setMes("") ;
     setImg(imgObj) ;
@@ -228,7 +281,7 @@ function Offline(): JSX.Element
       </View>
 
       <View style={ styles.Card2 }>
-        <Text style={ styles.TxtCard }> PLAYER 2 </Text>
+        <Text style={ styles.TxtCard }> CPU </Text>
       </View>
 
     </View>
@@ -441,4 +494,4 @@ const styles = StyleSheet.create({
 }) ;
 
 // Export Offline
-export default Offline ;
+export default CPU ;

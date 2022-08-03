@@ -7,6 +7,7 @@ import * as Font from "expo-font" ;
 import Error from "./pages/Error" ;
 import Menu from "./pages/Menu" ;
 import Offline from "./pages/Offline" ;
+import CPU from "./pages/CPU" ;
 
 // App
 function App(): JSX.Element
@@ -54,8 +55,8 @@ function App(): JSX.Element
       <Stack.Navigator initialRouteName="Menu" screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Menu" component={ Menu } />
         <Stack.Screen name="Offline" component={ Offline } />
+        <Stack.Screen name="CPU" component={ CPU } />
         <Stack.Screen name="Online" component={ Menu } />
-        <Stack.Screen name="CPU" component={ Menu } />
       </Stack.Navigator>
     </NavigationContainer>
   </>
