@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef } from "react" ;
+import { useState, useRef } from "react" ;
 import { StyleSheet, Image, Text, View, TouchableOpacity, ImageSourcePropType } from "react-native" ;
+import { setDoc, doc, getDocs } from "firebase/firestore" ;
 // ...
 import Images from "../components/Images" ;
+import db from "../components/firebaseProvider" ;
 
-// CPU
-function CPU(): JSX.Element
+// Online Blue
+function OnlineBlue({ navigation }: any): JSX.Element
 {
   // Variables
   const imgObj: ImageSourcePropType[] =
@@ -14,89 +16,58 @@ function CPU(): JSX.Element
     Images["emp7"], Images["emp8"], Images["emp9"]
   ] ;
   const [turn, setTurn] = useState<boolean>(true) ;
-  const slots = useRef<boolean[]>([true, true, true, true, true, true, true, true, true]) ;
-  const timeout = useRef<NodeJS.Timeout>() ;
+  const slots = useRef<string[]>(["emp1", "emp2", "emp3", "emp4", "emp5", "emp6", "emp7", "emp8", "emp9"]) ;
   const [game, setGame] = useState<boolean>(true) ;
   const [message, setMes] = useState<string>("") ;
   const [img, setImg] = useState<ImageSourcePropType[]>(imgObj) ;
+
+  // Update Server
+  async function update(): Promise<void>
+  {
+    try
+    {
+      let document: string = (Math.floor(Math.random() * 99999) + 10000).toString() ; 
+      let ref = doc(db, `server/${ document }`) ;
+
+      await setDoc(ref, { slots: slots }) ;
+    }
+    catch (err: any)
+    {
+      console.log(err) ;
+
+      setMes("Server Down!") ;
+      setTimeout(() => navigation.navigate("Menu"), 1500) ;
+    }
+  }
 
   // Handle Click
   function handleClick(x: number): void
   {
     if (game)
     {
-      if (turn)
+      let index: number = x - 1 ;
+
+      if (img[index] === Images["emp" + x])
       {
-        let index: number = x - 1 ;
+        let temp: ImageSourcePropType[] = img ;
 
-        if (img[index] === Images["emp" + x])
+        // Change Image
+        if (turn)
         {
-          let temp: ImageSourcePropType[] = img ;
-
-          // Change Image
           temp[index] = Images["cir" + x] ;
-
-          // Change Slots
-          slots.current[index] = false ;
-
-          checkGame(temp) ;
-
-          setTurn(!turn) ;
-          setImg(temp) ;
         }
-      }
-    }
-  }
-
-  // CPU Click
-  function handleCPU(x: number): void
-  {
-    if (game)
-    {
-      if (!turn)
-      {
-        let index: number = x - 1 ;
-
-        if (img[index] === Images["emp" + x])
+        else
         {
-          let temp: ImageSourcePropType[] = img ;
-
-          // Change Image
           temp[index] = Images["crs" + x] ;
-
-          // Change Slots
-          slots.current[index] = false ;
-
-          checkGame(temp) ;
-
-          setTurn(!turn) ;
-          setImg(temp) ;
         }
+
+        checkGame(temp) ;
+
+        setTurn(!turn) ;
+        setImg(temp) ;
       }
     }
   }
-
-  // CPU Brain
-  useEffect(() =>
-  {
-    if (!turn)
-    {
-      let availableIndex: number[] = [] ;
-
-      for (let i: number = 0; i < slots.current.length; i++)
-      {
-        if (slots.current[i])
-        {
-          availableIndex.push(i) ;
-        }
-      }
-
-      let index: number = Math.floor(Math.random() * (availableIndex.length)) ;
-
-      // CPU Click
-      timeout.current = setTimeout(() => handleCPU(availableIndex[index] + 1), 1500) ;
-    }
-  }, [turn]) ;
 
   // Check Game
   function checkGame(temp: ImageSourcePropType[]): void
@@ -203,7 +174,7 @@ function CPU(): JSX.Element
       }
       else
       {
-        setMes("CPU WON!") ;
+        setMes("PLAYER 2 WON!") ;
       }
 
       setGame(gameContinue) ;
@@ -214,8 +185,6 @@ function CPU(): JSX.Element
   function reset(): void
   {
     setTurn(true) ;
-    slots.current = [true, true, true, true, true, true, true, true, true] ;
-    clearTimeout(timeout.current) ;
     setGame(true) ;
     setMes("") ;
     setImg(imgObj) ;
@@ -229,7 +198,7 @@ function CPU(): JSX.Element
         
         { game &&
         <>
-          <TouchableOpacity onPress={ reset } style={ turn ? styles.CircleBlue : styles.CircleRed } />
+          <TouchableOpacity onPress={ update } style={ turn ? styles.CircleBlue : styles.CircleRed } />
         </>
         }
 
@@ -281,7 +250,7 @@ function CPU(): JSX.Element
       </View>
 
       <View style={ styles.Card2 }>
-        <Text style={ styles.TxtCard }> CPU </Text>
+        <Text style={ styles.TxtCard }> PLAYER 2 </Text>
       </View>
 
       <View style={ styles.Footer } />
@@ -503,5 +472,5 @@ const styles = StyleSheet.create({
   }
 }) ;
 
-// Export CPU
-export default CPU ;
+// Export Online Blue
+export default OnlineBlue ;

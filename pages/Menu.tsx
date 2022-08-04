@@ -22,7 +22,7 @@ function Menu({ navigation }: any): JSX.Element
           <Text style={ styles.Txt }> vs CPU </Text>
         </TouchableHighlight>
 
-        <TouchableHighlight onPress={ () => navigation.navigate("Online") } style={ styles.Button }>
+        <TouchableHighlight onPress={ () => navigation.navigate("Modal") } style={ styles.Button }>
           <Text style={ styles.Txt }> ONLINE </Text>
         </TouchableHighlight>
 

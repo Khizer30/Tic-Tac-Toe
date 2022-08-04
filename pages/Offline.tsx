@@ -231,6 +231,8 @@ function Offline(): JSX.Element
         <Text style={ styles.TxtCard }> PLAYER 2 </Text>
       </View>
 
+      <View style={ styles.Footer } />
+
     </View>
   </>
   ) ;
@@ -437,6 +439,14 @@ const styles = StyleSheet.create({
     position: "relative",
     width: 300,
     height: 300
+  },
+  Footer:
+  {
+    width: 500,
+    height: 70,
+    top: 200,
+    left: 0,
+    backgroundColor: "rgba(7,87,103,1)"
   }
 }) ;
 

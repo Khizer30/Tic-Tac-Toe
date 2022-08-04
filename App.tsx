@@ -8,6 +8,8 @@ import Error from "./pages/Error" ;
 import Menu from "./pages/Menu" ;
 import Offline from "./pages/Offline" ;
 import CPU from "./pages/CPU" ;
+import Modal from "./pages/Modal" ;
+import OnlineBlue from "./pages/OnlineBlue" ;
 
 // App
 function App(): JSX.Element
@@ -56,7 +58,10 @@ function App(): JSX.Element
         <Stack.Screen name="Menu" component={ Menu } />
         <Stack.Screen name="Offline" component={ Offline } />
         <Stack.Screen name="CPU" component={ CPU } />
-        <Stack.Screen name="Online" component={ Menu } />
+        <Stack.Screen name="OnlineBlue" component={ OnlineBlue } />
+
+        <Stack.Screen name="Modal" component={ Modal } options={{ presentation: "containedTransparentModal" }} />
+
       </Stack.Navigator>
     </NavigationContainer>
   </>
