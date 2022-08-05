@@ -148,11 +148,11 @@ function Offline(): JSX.Element
     {
       if (turn)
       {
-        setMes("PLAYER 1 WON!") ;
+        setMes("BLUE WON!") ;
       }
       else
       {
-        setMes("PLAYER 2 WON!") ;
+        setMes("RED WON!") ;
       }
 
       setGame(gameContinue) ;
@@ -224,11 +224,11 @@ function Offline(): JSX.Element
       </View>
 
       <View style={ styles.Card1 }>
-        <Text style={ styles.TxtCard }> PLAYER 1 </Text>
+        <Text style={ styles.TxtCard }> BLUE </Text>
       </View>
 
       <View style={ styles.Card2 }>
-        <Text style={ styles.TxtCard }> PLAYER 2 </Text>
+        <Text style={ styles.TxtCard }> RED </Text>
       </View>
 
       <View style={ styles.Footer } />

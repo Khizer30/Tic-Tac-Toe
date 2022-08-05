@@ -1,11 +1,15 @@
 import { useState } from "react" ;
 import { StyleSheet, Text, View, TouchableHighlight, TextInput } from "react-native" ;
+import { setDoc, doc, DocumentReference, DocumentData } from "firebase/firestore" ;
+// ...
+import db from "../components/firebaseProvider" ;
 
 // Modal
 function Modal({ navigation }: any): JSX.Element
 {
-  // Variable
+  // Variables
   const [key, setKey] = useState<number>() ;
+  const [mes, setMes] = useState<string>("") ;
 
   // Handle Change
   function handleChange(x: string): void
@@ -13,12 +17,29 @@ function Modal({ navigation }: any): JSX.Element
     setKey(~~x) ;
   }
 
+  // Create Server
+  async function createServer(): Promise<void>
+  {
+    let serverKey: string = (Math.floor(Math.random() * 89999) + 10000).toString() ;
+    let ref: DocumentReference<DocumentData> = doc(db, `server/${ serverKey }`) ;
+
+    setMes("Creating Room...") ;
+
+    await setDoc(ref, { game: true, turn: true, slots: ["emp1", "emp2", "emp3", "emp4", "emp5", "emp6", "emp7", "emp8", "emp9"] }) ;
+
+    setMes("") ;
+
+    navigation.navigate("OnlineBlue", { serverKey: serverKey }) ;
+  }
+
   return (
   <>
     <View style={ styles.Modal }>
       <View style={ styles.Group736 }>
 
-        <TouchableHighlight onPress={ () => navigation.navigate("OnlineBlue") } style={ styles.Button }>
+        <Text style={ styles.Message }> { mes } </Text>
+
+        <TouchableHighlight onPress={ createServer } style={ styles.Button }>
           <Text style={ styles.Txt645 }> Create Server </Text>
         </TouchableHighlight>
 
@@ -108,6 +129,16 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     borderBottomColor: "rgba(245,245,245,1)",
     borderBottomWidth: 1
+  },
+  Message:
+  {
+    fontSize: 15,
+    fontFamily: "Raleway",
+    color: "rgba(245,245,245,1)",
+    textAlign: "center",
+    justifyContent: "center",
+    width: 175,
+    height: 35
   }
 }) ;
 

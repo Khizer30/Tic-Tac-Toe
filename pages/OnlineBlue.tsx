@@ -1,41 +1,79 @@
-import { useState, useRef } from "react" ;
-import { StyleSheet, Image, Text, View, TouchableOpacity, ImageSourcePropType } from "react-native" ;
-import { setDoc, doc, getDocs } from "firebase/firestore" ;
+import { useState, useEffect } from "react" ;
+import { StyleSheet, Image, Text, View, TouchableOpacity } from "react-native" ;
+import { setDoc, doc, onSnapshot, DocumentReference, DocumentData, DocumentSnapshot, Unsubscribe } from "firebase/firestore" ;
 // ...
 import Images from "../components/Images" ;
 import db from "../components/firebaseProvider" ;
 
+// Snapshot Interface
+interface Snapshot
+{
+  game: boolean
+  turn: boolean
+  slots: string[]
+} ;
+
 // Online Blue
-function OnlineBlue({ navigation }: any): JSX.Element
+function OnlineBlue({ navigation, route }: any): JSX.Element
 {
   // Variables
-  const imgObj: ImageSourcePropType[] =
-  [
-    Images["emp1"], Images["emp2"], Images["emp3"], 
-    Images["emp4"], Images["emp5"], Images["emp6"], 
-    Images["emp7"], Images["emp8"], Images["emp9"]
-  ] ;
-  const [turn, setTurn] = useState<boolean>(true) ;
-  const slots = useRef<string[]>(["emp1", "emp2", "emp3", "emp4", "emp5", "emp6", "emp7", "emp8", "emp9"]) ;
+  const slotsObj: string[] = ["emp1", "emp2", "emp3", "emp4", "emp5", "emp6", "emp7", "emp8", "emp9"] ;
+  const snapshotObj: Snapshot = { game: true, turn: true, slots: slotsObj } ;
+  const serverKey: string = route.params.serverKey ;
+  const ref: DocumentReference<DocumentData> = doc(db, `server/${ serverKey }`) ;
+  // ...
+  const [snapshot, setSnapshot] = useState<Snapshot>(snapshotObj) ;
   const [game, setGame] = useState<boolean>(true) ;
-  const [message, setMes] = useState<string>("") ;
-  const [img, setImg] = useState<ImageSourcePropType[]>(imgObj) ;
+  const [turn, setTurn] = useState<boolean>(true) ;
+  const [slots, setSlots] = useState<string[]>(slotsObj) ;
+  const [message, setMes] = useState<string>(`Room Key: ${ serverKey }`) ;
 
-  // Update Server
+  // Read Snapshot
+  useEffect(() =>
+  {
+    const unsub: Unsubscribe = onSnapshot(ref, (doc: DocumentSnapshot<DocumentData>) =>
+    {
+      try
+      {
+        const source: string = doc.metadata.hasPendingWrites ? "Local" : "Server";
+
+        if (source === "Server")
+        {
+          setSnapshot({ game: doc.data()!.game, turn: doc.data()!.turn, slots: doc.data()!.slots }) ;
+        }
+      }
+      catch (err: any)
+      {
+        setMes("Server Error!") ;
+        setTimeout(() => navigation.navigate("Menu"), 1500) ;
+      }
+    }) ;
+
+    return () => unsub() ;
+  }, []) ;
+
+  // Update State
+  useEffect(() =>
+  {
+    setGame(snapshot.game) ;
+    setTurn(snapshot.turn) ;
+    setSlots((): string[] => [...snapshot.slots]) ;
+
+    // Check Game
+    checkGame() ;
+
+  }, [snapshot]) ;
+
+  // Update Database
   async function update(): Promise<void>
   {
     try
     {
-      let document: string = (Math.floor(Math.random() * 99999) + 10000).toString() ; 
-      let ref = doc(db, `server/${ document }`) ;
-
-      await setDoc(ref, { slots: slots }) ;
+      await setDoc(ref, { game: snapshot.game, turn: snapshot.turn, slots: snapshot.slots }) ;
     }
     catch (err: any)
     {
-      console.log(err) ;
-
-      setMes("Server Down!") ;
+      setMes("Server Error!") ;
       setTimeout(() => navigation.navigate("Menu"), 1500) ;
     }
   }
@@ -43,151 +81,127 @@ function OnlineBlue({ navigation }: any): JSX.Element
   // Handle Click
   function handleClick(x: number): void
   {
-    if (game)
+    if (snapshot.game)
     {
-      let index: number = x - 1 ;
-
-      if (img[index] === Images["emp" + x])
+      if (snapshot.turn)
       {
-        let temp: ImageSourcePropType[] = img ;
+        let index: number = x - 1 ;
 
-        // Change Image
-        if (turn)
+        if (slots[index] === ("emp" + x))
         {
-          temp[index] = Images["cir" + x] ;
-        }
-        else
-        {
-          temp[index] = Images["crs" + x] ;
-        }
+          // Change Slots
+          slots[index] = ("cir" + x) ;
+          snapshot.slots[index] = ("cir" + x) ; 
 
-        checkGame(temp) ;
+          // Change Turn
+          setTurn(!turn) ;
+          snapshot.turn = !snapshot.turn ;
 
-        setTurn(!turn) ;
-        setImg(temp) ;
+          // Check Game
+          checkGame() ;
+
+          // Call Update
+          update() ;
+        }
       }
     }
   }
 
   // Check Game
-  function checkGame(temp: ImageSourcePropType[]): void
+  function checkGame(): void
   {
     // Set Player
-    let x: string = turn ? "cir" : "crs" ;
+    let player: string = turn ? "cir" : "crs" ;
     let gameContinue: boolean = true ;
 
     // Tie
-    if ((temp[0] !== Images["emp1"]) && (temp[1] !== Images["emp2"]) && (temp[2] !== Images["emp3"]) && 
-    (temp[3] !== Images["emp4"]) && (temp[4] !== Images["emp5"]) && (temp[5] !== Images["emp6"]) && 
-    (temp[6] !== Images["emp7"]) && (temp[7] !== Images["emp8"]) && (temp[8] !== Images["emp9"]))
+    let tie: boolean = true ;
+
+    for (let i: number = 0; i < 9; i++)
+    {
+      if (snapshot.slots[i] === (`emp${ i + 1 }`))
+      {
+        tie = false ;
+      }
+    }
+
+    if (tie)
     {
       setMes("MATCH TIE!") ;
+
       setGame(false) ;
+      snapshot.game = false ;
     }
 
-    // Row 1
-    if ((temp[0] === Images[x + "1"]) && (temp[1] === Images[x + "2"]) && (temp[2] === Images[x + "3"]))
+    // Check Win
+    function checkWin(a: number, b: number, c: number): void
     {
-      temp[0] = Images[x + "W1"] ;
-      temp[1] = Images[x + "W2"] ;
-      temp[2] = Images[x + "W3"] ;
+      if ((snapshot.slots[a] === (player + (a + 1))) && (snapshot.slots[b] === (player + (b + 1))) &&
+      (snapshot.slots[c] === (player + (c + 1))))
+      {
+        slots[a] = (player + "W" + (a + 1)) ;
+        slots[b] = (player + "W" + (b + 1)) ;
+        slots[c] = (player + "W" + (c + 1)) ;
 
-      gameContinue = false ;
+        snapshot.slots[a] = (player + "W" + (a + 1)) ;
+        snapshot.slots[b] = (player + "W" + (b + 1)) ;
+        snapshot.slots[c] = (player + "W" + (c + 1)) ;
+
+        gameContinue = false ;
+      }
     }
 
-    // Row 2
-    if ((temp[3] === Images[x + "4"]) && (temp[4] === Images[x + "5"]) && (temp[5] === Images[x + "6"]))
-    {
-      temp[3] = Images[x + "W4"] ;
-      temp[4] = Images[x + "W5"] ;
-      temp[5] = Images[x + "W6"] ;
+    // Rows
+    checkWin(0, 1, 2) ;
+    checkWin(3, 4, 5) ;
+    checkWin(6, 7, 8) ;
 
-      gameContinue = false ;
-    }
+    // Columns
+    checkWin(0, 3, 6) ;
+    checkWin(1, 4, 7) ;
+    checkWin(2, 5, 8) ;
 
-    // Row 3
-    if ((temp[6] === Images[x + "7"]) && (temp[7] === Images[x + "8"]) && (temp[8] === Images[x + "9"]))
-    {
-      temp[6] = Images[x + "W7"] ;
-      temp[7] = Images[x + "W8"] ;
-      temp[8] = Images[x + "W9"] ;
-
-      gameContinue = false ;
-    }
-
-    // Column 1
-    if ((temp[0] === Images[x + "1"]) && (temp[3] === Images[x + "4"]) && (temp[6] === Images[x + "7"]))
-    {
-      temp[0] = Images[x + "W1"] ;
-      temp[3] = Images[x + "W4"] ;
-      temp[6] = Images[x + "W7"] ;
-
-      gameContinue = false ;
-    }
-
-    // Column 2
-    if ((temp[1] === Images[x + "2"]) && (temp[4] === Images[x + "5"]) && (temp[7] === Images[x + "8"]))
-    {
-      temp[1] = Images[x + "W2"] ;
-      temp[4] = Images[x + "W5"] ;
-      temp[7] = Images[x + "W8"] ;
-
-      gameContinue = false ;
-    }
-
-    // Column 3
-    if ((temp[2] === Images[x + "3"]) && (temp[5] === Images[x + "6"]) && (temp[8] === Images[x + "9"]))
-    {
-      temp[2] = Images[x + "W3"] ;
-      temp[5] = Images[x + "W6"] ;
-      temp[8] = Images[x + "W9"] ;
-
-      gameContinue = false ;
-    }
-
-    // L To R
-    if ((temp[0] === Images[x + "1"]) && (temp[4] === Images[x + "5"]) && (temp[8] === Images[x + "9"]))
-    {
-      temp[0] = Images[x + "W1"] ;
-      temp[4] = Images[x + "W5"] ;
-      temp[8] = Images[x + "W9"] ;
-
-      gameContinue = false ;
-    }
-
-    // R To L
-    if ((temp[2] === Images[x + "3"]) && (temp[4] === Images[x + "5"]) && (temp[6] === Images[x + "7"]))
-    {
-      temp[2] = Images[x + "W3"] ;
-      temp[4] = Images[x + "W5"] ;
-      temp[6] = Images[x + "W7"] ;
-
-      gameContinue = false ;
-    }
+    // Diagonals
+    checkWin(0, 4, 8) ;
+    checkWin(2, 4, 6) ;
 
     // Victor
     if (!gameContinue)
     {
       if (turn)
       {
-        setMes("PLAYER 1 WON!") ;
+        setMes("BLUE WON!") ;
       }
       else
       {
-        setMes("PLAYER 2 WON!") ;
+        setMes("RED WON!") ;
       }
 
-      setGame(gameContinue) ;
+      setGame(false) ;
+      snapshot.game = false ;
     }
   }
 
   // Reset
-  function reset(): void
+  async function reset(): Promise<void>
   {
-    setTurn(true) ;
+    // Reset Frontend
+    setSnapshot(snapshotObj) ;
     setGame(true) ;
-    setMes("") ;
-    setImg(imgObj) ;
+    setTurn(true) ;
+    setSlots(slotsObj) ;
+    setMes(`Room Key: ${ serverKey }`) ;
+
+    // Reset Backend
+    try
+    {
+      await setDoc(ref, { game: true, turn: true, slots: slotsObj }) ;
+    }
+    catch (err: any)
+    {
+      setMes("Server Error!") ;
+      setTimeout(() => navigation.navigate("Menu"), 1500) ;
+    }
   }
 
   return (
@@ -198,7 +212,7 @@ function OnlineBlue({ navigation }: any): JSX.Element
         
         { game &&
         <>
-          <TouchableOpacity onPress={ update } style={ turn ? styles.CircleBlue : styles.CircleRed } />
+          <TouchableOpacity onPress={ reset } style={ turn ? styles.CircleBlue : styles.CircleRed } />
         </>
         }
 
@@ -214,43 +228,43 @@ function OnlineBlue({ navigation }: any): JSX.Element
       <View style={ styles.Board }>
 
         <TouchableOpacity onPress={ () => handleClick(1) } style={ styles.Image1 }>
-          <Image style={ styles.Image } source={ img[0] } />
+          <Image style={ styles.Image } source={ Images[slots[0]] } />
         </TouchableOpacity>
         <TouchableOpacity onPress={ () => handleClick(2) } style={ styles.Image2 }>
-          <Image style={ styles.Image } source={ img[1] } />
+          <Image style={ styles.Image } source={ Images[slots[1]] } />
         </TouchableOpacity>
         <TouchableOpacity onPress={ () => handleClick(3) } style={ styles.Image3 }>
-          <Image style={ styles.Image } source={ img[2] } />
+          <Image style={ styles.Image } source={ Images[slots[2]] } />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={ () => handleClick(4) } style={ styles.Image4 }>
-          <Image style={ styles.Image } source={ img[3] } />
+          <Image style={ styles.Image } source={ Images[slots[3]] } />
         </TouchableOpacity>
         <TouchableOpacity onPress={ () => handleClick(5) } style={ styles.Image5 }>
-          <Image style={ styles.Image } source={ img[4] } />
+          <Image style={ styles.Image } source={ Images[slots[4]] } />
         </TouchableOpacity>
         <TouchableOpacity onPress={ () => handleClick(6) } style={ styles.Image6 }>
-          <Image style={ styles.Image } source={ img[5] } />
+          <Image style={ styles.Image } source={ Images[slots[5]] } />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={ () => handleClick(7) } style={ styles.Image7 }>
-          <Image style={ styles.Image } source={ img[6] } />
+          <Image style={ styles.Image } source={ Images[slots[6]] } />
         </TouchableOpacity>
         <TouchableOpacity onPress={ () => handleClick(8) } style={ styles.Image8 }>
-          <Image style={ styles.Image } source={ img[7] } />
+          <Image style={ styles.Image } source={ Images[slots[7]] } />
         </TouchableOpacity>
         <TouchableOpacity onPress={ () => handleClick(9) } style={ styles.Image9 }>
-          <Image style={ styles.Image } source={ img[8] } />
+          <Image style={ styles.Image } source={ Images[slots[8]] } />
         </TouchableOpacity>
 
       </View>
 
       <View style={ styles.Card1 }>
-        <Text style={ styles.TxtCard }> PLAYER 1 </Text>
+        <Text style={ styles.TxtCard }> BLUE </Text>
       </View>
 
       <View style={ styles.Card2 }>
-        <Text style={ styles.TxtCard }> PLAYER 2 </Text>
+        <Text style={ styles.TxtCard }> RED </Text>
       </View>
 
       <View style={ styles.Footer } />
