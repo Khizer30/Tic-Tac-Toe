@@ -10,6 +10,7 @@ import Offline from "./pages/Offline" ;
 import CPU from "./pages/CPU" ;
 import Modal from "./pages/Modal" ;
 import OnlineBlue from "./pages/OnlineBlue" ;
+import OnlineRed from "./pages/OnlineRed" ;
 
 // App
 function App(): JSX.Element
@@ -59,6 +60,7 @@ function App(): JSX.Element
         <Stack.Screen name="Offline" component={ Offline } />
         <Stack.Screen name="CPU" component={ CPU } />
         <Stack.Screen name="OnlineBlue" component={ OnlineBlue } />
+        <Stack.Screen name="OnlineRed" component={ OnlineRed } />
 
         <Stack.Screen name="Modal" component={ Modal } options={{ presentation: "containedTransparentModal" }} />
 

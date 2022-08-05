@@ -1,6 +1,6 @@
 import { useState } from "react" ;
 import { StyleSheet, Text, View, TouchableHighlight, TextInput } from "react-native" ;
-import { setDoc, doc, DocumentReference, DocumentData } from "firebase/firestore" ;
+import { setDoc, doc, DocumentReference, DocumentData, getDoc, DocumentSnapshot } from "firebase/firestore" ;
 // ...
 import db from "../components/firebaseProvider" ;
 
@@ -32,6 +32,34 @@ function Modal({ navigation }: any): JSX.Element
     navigation.navigate("OnlineBlue", { serverKey: serverKey }) ;
   }
 
+  // Find Server
+  async function findServer(): Promise<void>
+  {
+    if (key !== undefined)
+    {
+      let ref: DocumentReference<DocumentData> = doc(db, `server/${ key }`) ;
+
+      setMes("Finding Room...") ;
+
+      let docSnap: DocumentSnapshot<DocumentData> = await getDoc(ref) ;
+      
+      if (docSnap.exists())
+      {
+        setMes("") ;
+
+        navigation.navigate("OnlineRed", { serverKey: key }) ;
+      }
+      else
+      {
+        setMes("Room Does Not Exists!") ;
+      }
+    }
+    else
+    {
+      setMes("Enter a Server Key!") ;
+    }
+  }
+
   return (
   <>
     <View style={ styles.Modal }>
@@ -40,14 +68,14 @@ function Modal({ navigation }: any): JSX.Element
         <Text style={ styles.Message }> { mes } </Text>
 
         <TouchableHighlight onPress={ createServer } style={ styles.Button }>
-          <Text style={ styles.Txt645 }> Create Server </Text>
+          <Text style={ styles.Txt645 }> Create Room </Text>
         </TouchableHighlight>
 
         <TextInput
           onChangeText={ handleChange }
           textAlign="center"
           returnKeyType="done"
-          placeholder="Server Key"
+          placeholder="Room Key"
           maxLength={ 5 }
           editable={ true }
           autoFocus={ false }
@@ -58,8 +86,8 @@ function Modal({ navigation }: any): JSX.Element
           style={ styles.Txt858 }
         />
 
-        <TouchableHighlight onPress={ () => navigation.navigate("OnlineRed") } style={ styles.Button }>
-          <Text style={ styles.Txt645 }> Join Server </Text>
+        <TouchableHighlight onPress={ findServer } style={ styles.Button }>
+          <Text style={ styles.Txt645 }> Join Room </Text>
         </TouchableHighlight>
 
       </View>
