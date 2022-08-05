@@ -1,6 +1,6 @@
 import { useState } from "react" ;
 import { StyleSheet, Text, View, TouchableHighlight, TextInput } from "react-native" ;
-import { setDoc, doc, DocumentReference, DocumentData, getDoc, DocumentSnapshot } from "firebase/firestore" ;
+import { setDoc, doc, getDoc, DocumentReference, DocumentData, DocumentSnapshot } from "firebase/firestore" ;
 // ...
 import db from "../components/firebaseProvider" ;
 
@@ -56,7 +56,7 @@ function Modal({ navigation }: any): JSX.Element
     }
     else
     {
-      setMes("Enter a Server Key!") ;
+      setMes("Enter a Room Key!") ;
     }
   }
 

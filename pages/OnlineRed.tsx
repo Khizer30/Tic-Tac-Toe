@@ -35,7 +35,7 @@ function OnlineRed({ navigation, route }: any): JSX.Element
     {
       try
       {
-        const source: string = doc.metadata.hasPendingWrites ? "Local" : "Server";
+        const source: string = doc.metadata.hasPendingWrites ? "Local" : "Server" ;
 
         if (source === "Server")
         {
@@ -61,7 +61,6 @@ function OnlineRed({ navigation, route }: any): JSX.Element
 
     // Check Game
     checkGame() ;
-
   }, [snapshot]) ;
 
   // Update Database

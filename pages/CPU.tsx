@@ -41,6 +41,7 @@ function CPU(): JSX.Element
 
           checkGame(temp) ;
 
+          // Change Turn
           setTurn(!turn) ;
           setImg(temp) ;
         }
@@ -69,6 +70,7 @@ function CPU(): JSX.Element
 
           checkGame(temp) ;
 
+          // Change Turn
           setTurn(!turn) ;
           setImg(temp) ;
         }

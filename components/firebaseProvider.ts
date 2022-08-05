@@ -2,7 +2,7 @@ import { initializeApp, FirebaseApp } from "firebase/app" ;
 import { initializeFirestore, Firestore } from "firebase/firestore" ;
 
 // Firebase
-const firebaseConfig: object = 
+const firebaseConfig: object =
 {
   apiKey: "AIzaSyCj9_Q-D2khV2hRACswA8qIB8JziFesUfg",
   authDomain: "tic-tac-toe-0786.firebaseapp.com",
