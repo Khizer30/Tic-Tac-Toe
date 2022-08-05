@@ -384,9 +384,7 @@ const styles = StyleSheet.create({
     paddingBottom: 140,
     paddingLeft: 0,
     paddingRight: 0,
-    backgroundColor: "rgba(245,245,245,1)",
-    width: 360,
-    height: 640
+    backgroundColor: "rgba(245,245,245,1)"
   },
   Group: 
   {
@@ -404,6 +402,7 @@ const styles = StyleSheet.create({
     height: 35,
     borderRadius: 17.5,
     left: 30,
+    right: 30,
     top: 7
   },
   CircleRed: 
@@ -416,6 +415,7 @@ const styles = StyleSheet.create({
     height: 35,
     borderRadius: 17.5,
     left: 30,
+    right: 30,
     top: 7
   },
   CircleReload:
@@ -428,6 +428,7 @@ const styles = StyleSheet.create({
     height: 35,
     borderRadius: 17.5,
     left: 30,
+    right: 30,
     top: 7
   },
   TxtHeader: 
@@ -438,6 +439,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     justifyContent: "center",
     left: 30,
+    right: 30,
     width: 300,
     height: 50,
     marginBottom: 30,
@@ -449,6 +451,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 50,
     left: -20,
+    right: -20,
     paddingTop: 7,
     paddingBottom: 10,
     paddingLeft: 0,
@@ -466,6 +469,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 50,
     left: 230,
+    right: 230,
     paddingTop: 7,
     paddingBottom: 10,
     paddingLeft: 0,
@@ -501,6 +505,7 @@ const styles = StyleSheet.create({
     height: 70,
     top: 200,
     left: 0,
+    right: 0,
     backgroundColor: "rgba(7,87,103,1)"
   }
 }) ;

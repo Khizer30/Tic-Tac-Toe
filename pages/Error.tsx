@@ -30,8 +30,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    paddingTop: 49,
-    paddingBottom: 134,
+    paddingTop: 50,
+    paddingBottom: 135,
     paddingLeft: 35,
     paddingRight: 35,
     backgroundColor: "rgba(7,87,103,1)"
@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
     color: "rgba(245,245,245,1)",
     textAlign: "center",
     justifyContent: "center",
-    width: 301,
-    height: 151,
+    width: 300,
+    height: 150,
     textTransform: "uppercase"
   },
   Txt2: 
@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
     color: "rgba(245,245,245,1)",
     textAlign: "center",
     justifyContent: "center",
-    width: 301,
-    height: 101,
+    width: 300,
+    height: 100,
     textTransform: "uppercase"
   }
 }) ;

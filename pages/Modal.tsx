@@ -107,9 +107,7 @@ const styles = StyleSheet.create({
     marginTop: 235,
     paddingLeft: 80,
     paddingRight: 80,
-    backgroundColor: "rgba(7,87,103,1)",
-    width: 360,
-    height: 500
+    backgroundColor: "rgba(7,87,103,1)"
   },
   Group736: 
   {
