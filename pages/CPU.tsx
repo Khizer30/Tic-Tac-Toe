@@ -294,8 +294,6 @@ function CPU(): JSX.Element
   
         </View>
   
-        <View style={ styles.Footer } />
-  
       </View>
     </>
     ) ;

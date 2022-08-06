@@ -278,8 +278,6 @@ function OnlineBlue({ navigation, route }: any): JSX.Element
           <Text style={ styles.Txt2 }> { serverKey } </Text>
         </View>
   
-        <View style={ styles.Footer } />
-  
       </View>
     </>
     ) ;

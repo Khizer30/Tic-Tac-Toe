@@ -239,8 +239,6 @@ function Offline(): JSX.Element
   
         </View>
   
-        <View style={ styles.Footer } />
-  
       </View>
     </>
     ) ;
