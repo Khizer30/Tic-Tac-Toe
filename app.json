@@ -28,7 +28,8 @@
       {
         "foregroundImage": "./assets/logos/icon.png",
         "backgroundColor": "#F5F5F5"
-      }
+      },
+      "package": "com.khizer30.tictactoe"
     }
   }
 }

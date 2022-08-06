@@ -26,7 +26,7 @@ function OnlineRed({ navigation, route }: any): JSX.Element
   const [game, setGame] = useState<boolean>(true) ;
   const [turn, setTurn] = useState<boolean>(true) ;
   const [slots, setSlots] = useState<string[]>(slotsObj) ;
-  const [message, setMes] = useState<string>(`Room Key: ${ serverKey }`) ;
+  const [message, setMes] = useState<string>("") ;
 
   // Read Snapshot
   useEffect(() =>
@@ -189,7 +189,7 @@ function OnlineRed({ navigation, route }: any): JSX.Element
     setGame(true) ;
     setTurn(true) ;
     setSlots(slotsObj) ;
-    setMes(`Room Key: ${ serverKey }`) ;
+    setMes("") ;
 
     // Reset Backend
     try
@@ -204,238 +204,113 @@ function OnlineRed({ navigation, route }: any): JSX.Element
   }
 
   return (
-  <>
-    <View style={ styles.Offline }>
-
-      <View style={ styles.Group }>
-        
+    <>
+      <View style={ styles.Main }>
+  
+        <View style={ styles.Header }>
+  
+          <View style={ styles.CardBlue }>
+            <Text style={ styles.TxtCard }> BLUE </Text>
+          </View>
+  
+          <View style={ styles.CardRed }>
+            <Text style={ styles.TxtCard }> RED </Text>
+          </View>
+  
         { game &&
         <>
           <TouchableOpacity onPress={ reset } style={ turn ? styles.CircleBlue : styles.CircleRed } />
         </>
         }
-
+  
         { !game &&
         <>
           <TouchableOpacity onPress={ reset } style={ styles.CircleReload } />
         </>
         }
-
-        <Text style={ styles.TxtHeader }> { message } </Text>
+  
+          <Text style={ styles.HeaderTxt }> { message } </Text>
+  
+        </View>
+  
+        <View style={ styles.Board }>
+  
+          <View style={ styles.Row }>
+            <TouchableOpacity onPress={ () => handleClick(1) } style={ styles.ImagePos }>
+              <Image style={ styles.Image } source={ Images[slots[0]] } />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={ () => handleClick(2) } style={ styles.ImagePos }>
+              <Image style={ styles.Image } source={ Images[slots[1]] } />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={ () => handleClick(3) } style={ styles.ImagePos }>
+              <Image style={ styles.Image } source={ Images[slots[2]] } />
+            </TouchableOpacity>
+          </View>
+  
+          <View style={ styles.Row }>
+            <TouchableOpacity onPress={ () => handleClick(4) } style={ styles.ImagePos }>
+              <Image style={ styles.Image } source={ Images[slots[3]] } />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={ () => handleClick(5) } style={ styles.ImagePos }>
+              <Image style={ styles.Image } source={ Images[slots[4]] } />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={ () => handleClick(6) } style={ styles.ImagePos }>
+              <Image style={ styles.Image } source={ Images[slots[5]] } />
+            </TouchableOpacity>
+          </View>
+  
+          <View style={ styles.Row }>
+            <TouchableOpacity onPress={ () => handleClick(7) } style={ styles.ImagePos }>
+              <Image style={ styles.Image } source={ Images[slots[6]] } />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={ () => handleClick(8) } style={ styles.ImagePos }>
+              <Image style={ styles.Image } source={ Images[slots[7]] } />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={ () => handleClick(9) } style={ styles.ImagePos }>
+              <Image style={ styles.Image } source={ Images[slots[8]] } />
+            </TouchableOpacity>
+          </View>
+  
+        </View>
+  
+        <View style={ styles.Key }>
+          <Text style={ styles.Txt1 }> ROOM KEY </Text>
+          <Text style={ styles.Txt2 }> { serverKey } </Text>
+        </View>
+  
+        <View style={ styles.Footer } />
+  
       </View>
-
-      <View style={ styles.Board }>
-
-        <TouchableOpacity onPress={ () => handleClick(1) } style={ styles.Image1 }>
-          <Image style={ styles.Image } source={ Images[slots[0]] } />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={ () => handleClick(2) } style={ styles.Image2 }>
-          <Image style={ styles.Image } source={ Images[slots[1]] } />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={ () => handleClick(3) } style={ styles.Image3 }>
-          <Image style={ styles.Image } source={ Images[slots[2]] } />
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={ () => handleClick(4) } style={ styles.Image4 }>
-          <Image style={ styles.Image } source={ Images[slots[3]] } />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={ () => handleClick(5) } style={ styles.Image5 }>
-          <Image style={ styles.Image } source={ Images[slots[4]] } />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={ () => handleClick(6) } style={ styles.Image6 }>
-          <Image style={ styles.Image } source={ Images[slots[5]] } />
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={ () => handleClick(7) } style={ styles.Image7 }>
-          <Image style={ styles.Image } source={ Images[slots[6]] } />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={ () => handleClick(8) } style={ styles.Image8 }>
-          <Image style={ styles.Image } source={ Images[slots[7]] } />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={ () => handleClick(9) } style={ styles.Image9 }>
-          <Image style={ styles.Image } source={ Images[slots[8]] } />
-        </TouchableOpacity>
-
-      </View>
-
-      <View style={ styles.Card1 }>
-        <Text style={ styles.TxtCard }> BLUE </Text>
-      </View>
-
-      <View style={ styles.Card2 }>
-        <Text style={ styles.TxtCard }> RED </Text>
-      </View>
-
-      <View style={ styles.Footer } />
-
-    </View>
-  </>
-  ) ;
+    </>
+    ) ;
 }
 
 // Styles
 const styles = StyleSheet.create({
-  Image:
-  {
-    width: 100,
-    height: 100
-  },
-  Image1: 
-  {
-    position: "absolute",
-    top: 70,
-    left: 30,
-    width: 100,
-    height: 100
-  },
-  Image2: 
-  {
-    position: "absolute",
-    top: 70,
-    left: 130,
-    width: 100,
-    height: 100
-  },
-  Image3: 
-  {
-    position: "absolute",
-    top: 70,
-    left: 230,
-    width: 100,
-    height: 100
-  },
-  Image4: 
-  {
-    position: "absolute",
-    top: 170,
-    left: 30,
-    width: 100,
-    height: 100
-  },
-  Image5: 
-  {
-    position: "absolute",
-    top: 170,
-    left: 130,
-    width: 100,
-    height: 100
-  },
-  Image6: 
-  {
-    position: "absolute",
-    top: 170,
-    left: 230,
-    width: 100,
-    height: 100
-  },
-  Image7: 
-  {
-    position: "absolute",
-    top: 270,
-    left: 30,
-    width: 100,
-    height: 100
-  },
-  Image8: 
-  {
-    position: "absolute",
-    top: 270,
-    left: 130,
-    width: 100,
-    height: 100
-  },
-  Image9: 
-  {
-    position: "absolute",
-    top: 270,
-    left: 230,
-    width: 100,
-    height: 100
-  },
-  // ...
-  Offline: 
+  Main: 
   {
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
-    alignItems: "flex-start",
+    alignItems: "center",
     position: "relative",
-    paddingTop: 50,
-    paddingBottom: 140,
-    paddingLeft: 0,
-    paddingRight: 0,
+    paddingTop: 15,
     backgroundColor: "rgba(245,245,245,1)"
   },
-  Group: 
+  Header: 
   {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
+    position: "relative",
+    alignItems: "center",
+    width: 400,
+    marginBottom: 60
   },
-  CircleBlue: 
-  {
-    backgroundColor: "rgba(30,35,140,1)",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: "rgba(0,0,0,1)",
-    width: 35,
-    height: 35,
-    borderRadius: 17.5,
-    left: 30,
-    right: 30,
-    top: 7
-  },
-  CircleRed: 
-  {
-    backgroundColor: "rgb(140,30,30)",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: "rgba(0,0,0,1)",
-    width: 35,
-    height: 35,
-    borderRadius: 17.5,
-    left: 30,
-    right: 30,
-    top: 7
-  },
-  CircleReload:
-  {
-    backgroundColor: "rgb(1,150,75)",
-    borderWidth: 3,
-    borderStyle: "solid",
-    borderColor: "rgba(0,0,0,1)",
-    width: 35,
-    height: 35,
-    borderRadius: 17.5,
-    left: 30,
-    right: 30,
-    top: 7
-  },
-  TxtHeader: 
-  {
-    fontFamily: "Raleway",
-    fontSize: 30,
-    color: "rgba(7,87,103,1)",
-    textAlign: "center",
-    justifyContent: "center",
-    left: 30,
-    right: 30,
-    width: 300,
-    height: 50,
-    marginBottom: 30,
-    marginTop: 30,
-    textTransform: "uppercase"
-  },
-  Card1: 
+  CardBlue: 
   {
     position: "absolute",
     top: 50,
-    left: -20,
-    right: -20,
-    paddingTop: 7,
-    paddingBottom: 10,
-    paddingLeft: 0,
-    paddingRight: 0,
+    left: 0,
+    paddingTop: 8,
+    paddingBottom: 8,
     borderRadius: 100,
     backgroundColor: "rgba(30,35,140,1)",
     borderWidth: 1,
@@ -444,28 +319,10 @@ const styles = StyleSheet.create({
     width: 150,
     height: 50
   },
-  Card2: 
+  TxtCard:
   {
-    position: "absolute",
-    top: 50,
-    left: 230,
-    right: 230,
-    paddingTop: 7,
-    paddingBottom: 10,
-    paddingLeft: 0,
-    paddingRight: 0,
-    borderRadius: 100,
-    backgroundColor: "rgb(140,30,30)",
-    borderWidth: 1,
-    borderStyle: "solid",
-    borderColor: "rgba(0,0,0,1)",
-    width: 150,
-    height: 50
-  },
-  TxtCard: 
-  {
-    fontFamily: "Raleway",
     fontSize: 20,
+    fontFamily: "Raleway",
     color: "rgba(245,245,245,1)",
     textAlign: "center",
     justifyContent: "center",
@@ -473,20 +330,122 @@ const styles = StyleSheet.create({
     height: 30,
     textTransform: "uppercase"
   },
-  Board: 
+  CardRed:
+  {
+    position: "absolute",
+    top: 50,
+    right: 0,
+    paddingTop: 8,
+    paddingBottom: 8,
+    borderRadius: 100,
+    backgroundColor: "rgba(140,30,30,1)",
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "rgba(0,0,0,1)",
+    width: 150,
+    height: 50
+  },
+  CircleBlue: 
+  {
+    position: "absolute",
+    top: 55,
+    backgroundColor: "rgba(30,35,140,1)",
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "rgba(0,0,0,1)",
+    width: 35,
+    height: 35,
+    borderRadius: 17.5
+  },
+  CircleRed: 
+  {
+    position: "absolute",
+    top: 55,
+    backgroundColor: "rgb(140,30,30)",
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "rgba(0,0,0,1)",
+    width: 35,
+    height: 35,
+    borderRadius: 17.5
+  },
+  CircleReload:
+  {
+    position: "absolute",
+    top: 55,
+    backgroundColor: "rgb(1,150,75)",
+    borderWidth: 3,
+    borderStyle: "solid",
+    borderColor: "rgba(0,0,0,1)",
+    width: 35,
+    height: 35,
+    borderRadius: 17.5
+  },
+  HeaderTxt:
+  {
+    fontFamily: "Raleway",
+    fontSize: 30,
+    color: "rgba(7,87,103,1)",
+    textAlign: "center",
+    justifyContent: "center",
+    width: 300,
+    height: 50,
+    marginTop: 120,
+    textTransform: "uppercase"
+  },
+  Board:
   {
     position: "relative",
+    alignItems: "center",
     width: 300,
-    height: 300
+    height: 300,
+    marginBottom: 60
+  },
+  Row:
+  {
+    position: "relative",
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  ImagePos:
+  {
+    width: 100,
+    height: 100
+  },
+  Image:
+  {
+    width: 100,
+    height: 100
+  },
+  Key:
+  {
+    position: "relative",
+    alignItems: "center"
+  },
+  Txt1:
+  {
+    fontFamily: "Raleway",
+    fontSize: 17,
+    color: "rgba(7,87,103,1)",
+    textAlign: "center",
+    justifyContent: "center",
+    textTransform: "uppercase"
+  },
+  Txt2:
+  {
+    fontFamily: "Raleway",
+    fontSize: 15,
+    color: "rgba(7,87,103,1)",
+    textAlign: "center",
+    justifyContent: "center",
+    textTransform: "uppercase"
   },
   Footer:
   {
+    backgroundColor: "rgba(7,87,103,1)",
+    height: 50,
     width: 500,
-    height: 70,
-    top: 200,
-    left: 0,
-    right: 0,
-    backgroundColor: "rgba(7,87,103,1)"
+    bottom: -35
   }
 }) ;
 
