@@ -55,12 +55,15 @@ function OnlineRed({ navigation, route }: any): JSX.Element
   // Update State
   useEffect(() =>
   {
+    setMes("") ;
+
     setGame(snapshot.game) ;
-    setTurn(snapshot.turn) ;
     setSlots((): string[] => [...snapshot.slots]) ;
 
     // Check Game
     checkGame() ;
+
+    setTurn(snapshot.turn) ;
   }, [snapshot]) ;
 
   // Update Database
@@ -111,9 +114,8 @@ function OnlineRed({ navigation, route }: any): JSX.Element
   {
     // Set Player
     let player: string = turn ? "cir" : "crs" ;
-    let gameContinue: boolean = true ;
 
-    // Tie
+    // Check Tie
     let tie: boolean = true ;
 
     for (let i: number = 0; i < 9; i++)
@@ -145,8 +147,18 @@ function OnlineRed({ navigation, route }: any): JSX.Element
         snapshot.slots[a] = (player + "W" + (a + 1)) ;
         snapshot.slots[b] = (player + "W" + (b + 1)) ;
         snapshot.slots[c] = (player + "W" + (c + 1)) ;
+        
+        if (turn)
+        {
+          setMes("BLUE WON!") ;
+        }
+        else
+        {
+          setMes("RED WON!") ;
+        }
 
-        gameContinue = false ;
+        setGame(false) ;
+        snapshot.game = false ;
       }
     }
 
@@ -163,22 +175,6 @@ function OnlineRed({ navigation, route }: any): JSX.Element
     // Diagonals
     checkWin(0, 4, 8) ;
     checkWin(2, 4, 6) ;
-
-    // Victor
-    if (!gameContinue)
-    {
-      if (turn)
-      {
-        setMes("BLUE WON!") ;
-      }
-      else
-      {
-        setMes("RED WON!") ;
-      }
-
-      setGame(false) ;
-      snapshot.game = false ;
-    }
   }
 
   // Reset
