@@ -308,8 +308,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     alignItems: "center",
     position: "relative",
-    paddingTop: 15,
-    backgroundColor: "rgba(245,245,245,1)"
+    paddingTop: 15
   },
   Header: 
   {
