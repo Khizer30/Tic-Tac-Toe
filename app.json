@@ -2,7 +2,8 @@
   "expo": 
   {
     "name": "Tic-Tac-Toe",
-    "slug": "Tic-Tac-Toe",
+    "slug": "tic-tac-toe",
+    "owner": "khizer30",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logos/icon_old.png",

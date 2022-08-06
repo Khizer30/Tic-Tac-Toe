@@ -40,12 +40,10 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     justifyContent: "flex-start",
-    alignItems: "flex-start",
     paddingTop: 50,
     paddingBottom: 135,
-    paddingLeft: 55,
-    paddingRight: 55,
-    backgroundColor: "rgba(7,87,103,1)"
+    backgroundColor: "rgba(7,87,103,1)",
+    alignItems: "center"
   },
   Group: 
   {
